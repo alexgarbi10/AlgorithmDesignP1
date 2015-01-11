@@ -1,5 +1,7 @@
 /**
- * @author Alejandro Garbi
+ * Scheduling
+ * @author Alejandro Garbi, 08-10398
+ * @author David Lillue,
  */
 
 import java.io.BufferedReader;
@@ -58,7 +60,7 @@ public class P3 {
         }
     }
     
-        /**
+    /**
      * Print all elements in an array.
      * @param array the array of values to be printed.
      */
@@ -93,6 +95,12 @@ public class P3 {
         System.out.println();
     }
     
+    /**
+     * Select the max size of activities to be executed
+     * @param array the array of values to select
+     * @param n the array size
+     * @return answer max number of activities
+     */
     public static int greedySelector(int array[][], int n) 
     {
         int answer = 1;
@@ -144,6 +152,7 @@ public class P3 {
             
             int[] result = new int[m];
             
+            // Run every employee instance
             while (count < m)
             {
                 line = br.readLine();
@@ -158,6 +167,7 @@ public class P3 {
                 int [][] times = new int[n][2];
                 int index = 0;
                 
+                // Parse activities
                 while (index < n)
                 {
                     line = br.readLine();
