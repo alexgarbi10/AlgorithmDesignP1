@@ -11,10 +11,10 @@ import java.io.IOException;
 public class P3 {
     
     /**
-     * Sort an array using merge sort (by finish times)
-     * @param array the array of values to be sorted
-     * @param start the start of the sorting region
-     * @param end the end of the sorting region
+     * Sort an array using merge sort (by finish times).
+     * @param array the array of values to be sorted.
+     * @param start the start of the sorting region.
+     * @param end the end of the sorting region.
      */
     public static void mergeSort(int array[][], int start, int end) 
     {
@@ -96,10 +96,10 @@ public class P3 {
     }
     
     /**
-     * Select the max size of activities to be executed
-     * @param array the array of values to select
-     * @param n the array size
-     * @return answer max number of activities
+     * Select the max size of activities to be executed.
+     * @param array the array of values to select.
+     * @param n the array size.
+     * @return answer max number of activities.
      */
     public static int greedySelector(int array[][], int n) 
     {
@@ -108,7 +108,6 @@ public class P3 {
                 
         for (int i=1; i < n; i++)
         {
-        
             if (array[i][0] >= array[k][1])
             {
                 answer++;
@@ -121,7 +120,7 @@ public class P3 {
 
     /**
      * Main method.
-     * @param args the command line arguments
+     * @param args the command line arguments.
      */
     public static void main(String[] args) 
     {
@@ -152,7 +151,7 @@ public class P3 {
             
             int[] result = new int[m];
             
-            // Run every employee instance
+            // Check every employee instance
             while (count < m)
             {
                 line = br.readLine();
