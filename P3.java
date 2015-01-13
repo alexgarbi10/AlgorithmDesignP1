@@ -1,7 +1,7 @@
 /**
  * Scheduling
  * @author Alejandro Garbi, 08-10398
- * @author David Lillue,
+ * @author David Lilue,
  */
 
 import java.io.BufferedReader;
@@ -11,39 +11,34 @@ import java.io.IOException;
 public class P3 {
     
     /**
-     * Sort an array using merge sort (by finish times).
+     * Sort an array using merge sort.
      * @param array the array of values to be sorted.
      * @param start the start of the sorting region.
      * @param end the end of the sorting region.
      */
-    public static void mergeSort(int array[][], int start, int end) 
-    {
+    public static void mergeSort(int array[][], int start, int end) {
         int middle;
         int left;
         int right;
         int temps;
         int tempf;
 
-        if (start < end) 
-        {
-            // Split the array in half
+        if (start < end) {
+            // Split array in half
             middle = (start + end) / 2;
             mergeSort(array, start, middle);
             mergeSort(array, middle + 1, end);
 
-            // Merge the sorted arrays
+            // Merge both arrays
             left = start;
             right = middle + 1;
 
-            while (left <= middle && right <= end) 
-            {
-                if (array[left][1] > array[right][1]) 
-                {
+            while (left <= middle && right <= end) {
+                if (array[left][1] > array[right][1]) {
                     temps = array[right][0];
                     tempf = array[right][1];
                     
-                    for (int i=right-1; i>=left; i--) 
-                    {
+                    for (int i=right-1; i>=left; i--) {
                         array[i+1][0] = array[i][0];
                         array[i+1][1] = array[i][1];
                     }
@@ -64,25 +59,17 @@ public class P3 {
      * Print all elements in an array.
      * @param array the array of values to be printed.
      */
-    public static void printArray(int array[]) 
-    {
-        int index = 0;
-        
+    public static void printArray(int array[]) {        
         for (int element : array) {
-            System.out.println("Instancia " + index);
-            System.out.println("Numero de actividades: " + element);
-            index++;
+            System.out.println(element);
         }
-        
-        System.out.println();
     }
 
     /**
-     * Print all elements in an array.
+     * Print all elements in a matrix.
      * @param array the array of values to be printed.
      */
-    public static void printTimes(int array[][]) 
-    {
+    public static void printTimes(int array[][]) {
         int index = 0;
         
         for (int[] element : array) {
@@ -91,25 +78,22 @@ public class P3 {
             System.out.println("tf: " + element[1] + " ");
             index++;
         }
-        
-        System.out.println();
     }
     
     /**
      * Select the max size of activities to be executed.
      * @param array the array of values to select.
+     *        array[][0] -> s[] (start times).
+     *        array[][1] -> f[] (finish times).
      * @param n the array size.
-     * @return answer max number of activities.
+     * @return integer.
      */
-    public static int greedySelector(int array[][], int n) 
-    {
+    public static int greedySelector(int array[][], int n) {
         int answer = 1;
         int k = 0;
                 
-        for (int i=1; i < n; i++)
-        {
-            if (array[i][0] >= array[k][1])
-            {
+        for (int i=1; i < n; i++) {
+            if (array[i][0] >= array[k][1]) {
                 answer++;
                 k = i;
             }
@@ -122,18 +106,15 @@ public class P3 {
      * Main method.
      * @param args the command line arguments.
      */
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
 
         // Check arguments
-        if (args.length < 1)
-        {
+        if (args.length < 1) {
             System.out.println("Error: Debe indicar el nombre del archivo.");
             System.exit(1);
         }
         
-        try 
-        {
+        try {
             // Parse instance
             BufferedReader br = new BufferedReader(new FileReader(args[0]));
             String line;
@@ -143,8 +124,7 @@ public class P3 {
             line = br.readLine();
             m = Integer.parseInt(line);
             
-            if (m < 0)
-            {
+            if (m < 0) {
                 System.out.println("Error: El numero de empleados debe ser positivo.");
                 System.exit(1);
             }
@@ -152,32 +132,29 @@ public class P3 {
             int[] result = new int[m];
             
             // Check every employee instance
-            while (count < m)
-            {
+            while (count < m) {
                 line = br.readLine();
                 n = Integer.parseInt(line);
                 
-                if (n < 0)
-                {
+                if (n < 0) {
                     System.out.println("Error: El numero de actividades debe ser positivo.");
                     System.exit(1);
                 }
                 
+                // times = s[] and f[]
                 int [][] times = new int[n][2];
                 int index = 0;
                 
                 // Parse activities
-                while (index < n)
-                {
+                while (index < n) {
                     line = br.readLine();
                     String[] sf = line.split(" ");
                     int x = Integer.parseInt(sf[0]);
                     int y = Integer.parseInt(sf[1]);
                     
-                    if (x > y)
-                    {
-                    System.out.println("Error: El tiempo de inicio debe ser menor que el de finalizacion.");
-                    System.exit(1);
+                    if (x > y) {
+                        System.out.println("Error: El tiempo de inicio debe ser menor que el de finalizacion.");
+                        System.exit(1);
                     }
                     
                     times[index][0] = Integer.parseInt(sf[0]);
@@ -193,12 +170,9 @@ public class P3 {
                 count++;
             }
             
-            System.out.println("Resultados: ");
-            System.out.println();
             printArray(result);
         } 
-        catch (IOException | NumberFormatException e) 
-        {
+        catch (IOException | NumberFormatException e) {
             System.out.println("Error: No ha podido procesarse el archivo.");
         }
     }
