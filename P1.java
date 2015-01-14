@@ -7,6 +7,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 public class P1 {
     
@@ -19,7 +20,7 @@ public class P1 {
         public int y = -1;
 
 	/**
-	 * Create a new node with id i.
+	 * Creates a new node with id i.
          * @param i Identifier of the node.
          * @param x Coordinate of the x-axe.
          * @param y Coordinate of the y-axe.
@@ -76,42 +77,42 @@ public class P1 {
 	}
     }
     
-    public class Arc {
+    public class Edge {
   
         public int src;
         public int dst;
         public int cost;
         
-        public Arc(int src, int dst, int cost) {
+        public Edge(int src, int dst, int cost) {
             this.src = src;
             this.dst = dst;
             this.cost = cost;
         }
         
         /**
-         * Compare arcs.
+         * Compare edges.
          * @param obj Object to compare.
          * @return boolean.
          */
         @Override
         public boolean equals(Object obj) {
-            Arc arc;
+            Edge edge;
        
             if (obj == null) {
                 return false;
             }
         
-            if (!(obj instanceof Arc)) {
+            if (!(obj instanceof Edge)) {
                 return false;
             }
 
-            arc = (Arc) obj;
+            edge = (Edge) obj;
 
-            return this.dst == arc.dst && this.src == arc.src;
+            return this.dst == edge.dst && this.src == edge.src;
         }
     
         /**
-         * String representation of the arc.
+         * String representation of the edge.
          * @return String.
          */
         @Override
@@ -120,14 +121,14 @@ public class P1 {
         }
         
         /**
-         * Prints the arc.
+         * Prints the edge.
          */
-        public void printArc() {
+        public void printEdge() {
             System.out.println("Origen: "+this.src+" Destino: "+this.dst+" Costo: "+this.cost);
         }
 
         /**
-         * Hash-code for the arcs.
+         * Hash-code for the edges.
          * @return integer.
          */
         @Override
@@ -136,6 +137,24 @@ public class P1 {
         }
     }
     
+    public class Graph {
+
+        private int node_size, edge_size; 
+        private Node nodes[];
+//        private List<Edge> edges[];
+   
+        /**
+         * Creates a new graph.
+         * @param size Number of nodes.
+         */
+        public Graph(int size) {
+            this.edge_size = 0;
+            this.node_size = size; // Numero de nodos inicial.
+            this.nodes = new Node[size]; // Arreglo de nodos.
+//            this.edges = new List[numNodos]; // Arreglo de lista de adyacencias.
+        }
+    }
+
     /**
      * Main method.
      * @param args the command line arguments.
@@ -218,4 +237,4 @@ public class P1 {
             System.out.println("Error: No ha podido procesarse el archivo.");
         }
     }
-}
+    }
