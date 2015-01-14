@@ -7,15 +7,15 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class P1 {
     
-    public class Node {
+    public static class Node {
 
-	// Node identifier.
 	public int id = -1;
-        // Coordinates
         public int x = -1;
         public int y = -1;
 
@@ -64,26 +64,17 @@ public class P1 {
 	 * Prints the node.
 	 */
 	public void printNode() {
-            System.out.println("Id: "+this.id);
-	}
-
-	/**
-	 * Hash-code for the nodes.
-         * @return integer.
-	 */
-	@Override
-	public int hashCode() {
-            return this.id;
+            System.out.println("Id: "+this.id+" ("+this.x+", "+this.y+")");
 	}
     }
     
-    public class Edge {
+    public static class Edge {
   
-        public int src;
-        public int dst;
-        public int cost;
+        public final int src;
+        public final int dst;
+        public final double cost;
         
-        public Edge(int src, int dst, int cost) {
+        public Edge(int src, int dst, double cost) {
             this.src = src;
             this.dst = dst;
             this.cost = cost;
@@ -108,7 +99,8 @@ public class P1 {
 
             edge = (Edge) obj;
 
-            return this.dst == edge.dst && this.src == edge.src;
+            return (this.dst == edge.dst && this.src == edge.src) ||
+                    (this.dst == edge.src && this.src == edge.dst);
         }
     
         /**
@@ -126,22 +118,34 @@ public class P1 {
         public void printEdge() {
             System.out.println("Origen: "+this.src+" Destino: "+this.dst+" Costo: "+this.cost);
         }
+    }
+    
+    public static class EdgeComparator implements Comparator<Edge>
+    {
 
         /**
-         * Hash-code for the edges.
+         * Compare two edges.
+         * @param x Edge to compare.
+         * @param y Edge to compare.
          * @return integer.
          */
         @Override
-        public int hashCode() {
-            return this.src;
+        public int compare(Edge x, Edge y)
+        {
+            if (x.cost == y.cost)
+                return 0;
+            else if (x.cost > y.cost)        
+                return 1;
+            else
+                return -1;
         }
     }
     
-    public class Graph {
+    public static class Graph {
 
         private int node_size, edge_size; 
         private Node nodes[];
-//        private List<Edge> edges[];
+        private PriorityQueue<Edge> edges;
    
         /**
          * Creates a new graph.
@@ -149,9 +153,70 @@ public class P1 {
          */
         public Graph(int size) {
             this.edge_size = 0;
-            this.node_size = size; // Numero de nodos inicial.
-            this.nodes = new Node[size]; // Arreglo de nodos.
-//            this.edges = new List[numNodos]; // Arreglo de lista de adyacencias.
+            this.node_size = 0; 
+            this.nodes = new Node[size];
+            Comparator<Edge> comparator = new EdgeComparator();
+            this.edges = new PriorityQueue<Edge>(10,comparator);
+            
+        }
+        
+        /**
+         * Adds a new node to the graph.
+         * @param node Node to be added.
+         */
+        public void add(Node node) {
+            this.nodes[node.id] = node;
+        }
+        
+        /**
+         * Adds a new edge to the graph.
+         * @param edge Edge to be added.
+         */
+        public void add(Edge edge) {
+            if (!this.edges.contains(edge)) {
+                this.edges.add(edge);
+            }    
+        }
+        
+        /**
+         * Calculates the distance between two points.
+         * @param n1 Point 1.
+         * @param n2 Point 2.
+         * @return double.
+         */
+        public double distance(Node n1, Node n2) {
+            double x = Math.abs(n1.x - n2.x);
+            double y = Math.abs(n1.y - n2.y);
+            double dist = Math.sqrt(x*x + y*y);
+            return dist;
+        }
+        
+        /**
+         * Calculates all posible edges.
+         */
+        public void createEdges() {
+            for (Node element : this.nodes) {
+                for (Node other : this.nodes) {
+                    if (!(element.equals(other))) {
+                        double dist = distance(element, other);
+                        Edge edge = new Edge(element.id,other.id,dist);
+                        this.add(edge);
+                    }
+                }
+            }
+        }
+        
+        /**
+         * Prints the graph.
+         */
+        public void printGraph() {
+            for (Node element : this.nodes) {
+                element.printNode();
+            }
+         
+            for (Edge aux : this.edges) {
+                aux.printEdge();
+            }
         }
     }
 
@@ -199,6 +264,7 @@ public class P1 {
                 int u = Integer.parseInt(sf[3]);
                 int v = Integer.parseInt(sf[4]);
                 int index = 0;
+                Graph g = new Graph(n);
                 
                 if ((n < 0) || (r < 0) || (m < 0) || (u < 0) || (v < 0))
                 {
@@ -215,19 +281,18 @@ public class P1 {
                 while (index < n)
                 {
                     line = br.readLine();
-                    String[] coord = line.split(" ");
-                    
-                    System.out.println("Index: " + index);
-                    System.out.println("X: " + coord[0]);
-                    System.out.println("Y: " + coord[1]);
-                    //Nodo(index, x, y);
-                    
+                    String[] coord = line.split(" "); 
+                    Node node = new Node(index, Integer.parseInt(coord[0]), Integer.parseInt(coord[1]));
+                    g.add(node);
                     index++;
                 }
                 
+                g.createEdges();
+                g.printGraph();
+                
+                
+                
                 // Min_Tree(G, V);
-                
-                
                 
                 count++;
             }
