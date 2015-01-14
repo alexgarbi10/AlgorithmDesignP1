@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class P1 {
@@ -49,15 +48,6 @@ public class P1 {
             node = (Node) obj;
 
             return this.id == node.id;
-	}
-
-	/**
-         * String representation of the node.
-         * @return String.
-         */
-	@Override
-	public String toString() {
-            return Integer.toString(this.id);
 	}
 
 	/**
@@ -102,15 +92,6 @@ public class P1 {
             return (this.dst == edge.dst && this.src == edge.src) ||
                     (this.dst == edge.src && this.src == edge.dst);
         }
-    
-        /**
-         * String representation of the edge.
-         * @return String.
-         */
-        @Override
-        public String toString() {
-            return "(" + Integer.toString(src) + ", " + Integer.toString(dst) +")";
-        }
         
         /**
          * Prints the edge.
@@ -143,9 +124,9 @@ public class P1 {
     
     public static class Graph {
 
-        private int node_size, edge_size; 
-        private Node nodes[];
-        private PriorityQueue<Edge> edges;
+        public int node_size, edge_size; 
+        public Node nodes[];
+        public PriorityQueue<Edge> edges;
    
         /**
          * Creates a new graph.
@@ -153,10 +134,10 @@ public class P1 {
          */
         public Graph(int size) {
             this.edge_size = 0;
-            this.node_size = 0; 
+            this.node_size = size; 
             this.nodes = new Node[size];
             Comparator<Edge> comparator = new EdgeComparator();
-            this.edges = new PriorityQueue<Edge>(10,comparator);
+            this.edges = new PriorityQueue<>(10,comparator);
             
         }
         
@@ -219,6 +200,127 @@ public class P1 {
             }
         }
     }
+    
+    public static class Kruskal {
+        
+        public Graph g;
+        public Graph min;
+        public int m;
+        public double total_ucost;
+        public double total_vcost;
+        public int ucost;
+        public int vcost;
+        public int r;
+        public int index;
+        private int comp_size; // Number of connected components.
+        private int compConn[]; // Array of connected components.
+        private int rank[]; // Array of rankings for connected components.
+
+        /**
+         * Creates a new Kruskal instance for the Graph.
+         * @param g Original graph.
+         * @param min Minimal cost tree.
+         * @param m Number of modems.
+         * @param ucost Direct connection.
+         * @param vcost Indirect connection.
+         * @param r Distance radius for u & v.
+         * @param index Instance number.
+         */
+        public Kruskal(Graph g, Graph min, int m, int ucost, int vcost, int r, int index) {
+            this.g = g;
+            this.min = min;
+            this.m = m;
+            this.total_ucost = 0.0;
+            this.total_vcost = 0.0;
+            this.ucost = ucost;
+            this.vcost = vcost;
+            this.r = r;
+            this.index = index;
+            this.comp_size = g.node_size;
+            this.compConn = new int[g.node_size];
+            this.rank = new int[g.node_size];
+        }
+
+        /**
+         * Creates new disjoint sets for the node.
+         * @param node Node in the set.
+         */
+        public void makeSet(Node node) {
+            this.compConn[node.id] = node.id;
+            this.rank[node.id] = 0;
+        }
+
+        /**
+         * Gets the number of set for the node.
+         * @param node Node to search.
+         * @return integer.
+         */
+        public int getComp(int node) {
+            if (this.compConn[node] != node) {
+		int y = getComp(this.compConn[node]);
+		this.compConn[node] = y;
+            } 
+
+            return (this.compConn[node]);
+        }
+
+        /**
+         * Joins two sets into a one connected component.
+         * @param src Set to join.
+         * @param dst Set to join.
+         */
+        public void Join(int src, int dst) {
+            if (this.rank[src] > this.rank[dst]) {
+		this.compConn[dst] = src;
+            }
+            else { 
+		this.compConn[src] = dst;
+		
+		if (this.rank[src] == this.rank[dst]) {
+                    this.rank[src]++;
+		}		
+            }
+
+            this.comp_size--;		
+        }
+
+
+        /**
+         * Run the graph instance to obtain the min-tree.
+         */
+        public void executeKruskal() {
+    
+            // Start every set
+    	    for (Node element : g.nodes) {
+                this.makeSet(element);
+            }
+
+            while ((!this.g.edges.isEmpty()) && (this.comp_size > m)) {
+        	Edge edge = this.g.edges.poll();
+                
+		int compx = getComp(edge.src);
+		int compy = getComp(edge.dst);
+		
+                // If compx == compy there is a cycle
+		if (compx != compy) {
+                    this.min.add(edge);
+                    Join(edge.src, edge.dst);
+		}
+            }
+            
+            // Calculate costs for every edge in the min-tree
+            for (Edge element : min.edges) {
+                if (element.cost > this.r) {
+                    this.total_vcost = this.total_vcost + (element.cost*this.vcost);
+                }
+                else {
+                    this.total_ucost = this.total_ucost + (element.cost*this.ucost);
+                }
+            }
+
+            System.out.println("Caso #"+this.index+": "+this.total_ucost+" "+this.total_vcost);
+        }
+    }
 
     /**
      * Main method.
@@ -251,8 +353,6 @@ public class P1 {
                 System.exit(1);
             }
             
-            int[] result = new int[size];
-            
             // Solve every instance
             while (count < size)
             {
@@ -265,6 +365,7 @@ public class P1 {
                 int v = Integer.parseInt(sf[4]);
                 int index = 0;
                 Graph g = new Graph(n);
+                Graph min = new Graph(n);
                 
                 if ((n < 0) || (r < 0) || (m < 0) || (u < 0) || (v < 0))
                 {
@@ -278,22 +379,23 @@ public class P1 {
                     System.exit(1);
                 }
                 
+                // Add every node
                 while (index < n)
                 {
                     line = br.readLine();
                     String[] coord = line.split(" "); 
                     Node node = new Node(index, Integer.parseInt(coord[0]), Integer.parseInt(coord[1]));
                     g.add(node);
+                    min.add(node);
                     index++;
                 }
                 
+                // Add all posible edges with distances
                 g.createEdges();
-                g.printGraph();
                 
-                
-                
-                // Min_Tree(G, V);
-                
+                // Get the Minimum Spanning Tree 
+                Kruskal kruskal = new Kruskal(g,min,m,u,v,r,count+1);
+                kruskal.executeKruskal();
                 count++;
             }
         } 
@@ -302,4 +404,4 @@ public class P1 {
             System.out.println("Error: No ha podido procesarse el archivo.");
         }
     }
-    }
+}
