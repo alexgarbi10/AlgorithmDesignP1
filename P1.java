@@ -255,9 +255,9 @@ public class P1 {
          * @param node Node to search.
          * @return integer.
          */
-        public int getComp(int node) {
+        public int Find(int node) {
             if (this.compConn[node] != node) {
-		int y = getComp(this.compConn[node]);
+		int y = Find(this.compConn[node]);
 		this.compConn[node] = y;
             } 
 
@@ -298,8 +298,8 @@ public class P1 {
             while ((!this.g.edges.isEmpty()) && (this.comp_size > m)) {
         	Edge edge = this.g.edges.poll();
                 
-		int compx = getComp(edge.src);
-		int compy = getComp(edge.dst);
+		int compx = Find(edge.src);
+		int compy = Find(edge.dst);
 		
                 // If compx == compy there is a cycle
 		if (compx != compy) {
