@@ -5,8 +5,9 @@
  */
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -289,6 +290,7 @@ public class P1 {
          * Run the graph instance to obtain the min-tree.
          */
         public void executeKruskal() {
+            DecimalFormat df = new DecimalFormat("0.000");
     
             // Start every set
     	    for (Node element : g.nodes) {
@@ -318,7 +320,7 @@ public class P1 {
                 }
             }
 
-            System.out.println("Caso #"+this.index+": "+this.total_ucost+" "+this.total_vcost);
+            System.out.println("Caso #"+this.index+": "+df.format(this.total_ucost)+" "+df.format(this.total_vcost));
         }
     }
 
@@ -328,18 +330,10 @@ public class P1 {
      */
     public static void main(String[] args) 
     {
-
-        // Check arguments
-        if (args.length < 1)
-        {
-            System.out.println("Error: Debe indicar el nombre del archivo.");
-            System.exit(1);
-        }
-        
         try 
         {
             // Parse instance
-            BufferedReader br = new BufferedReader(new FileReader(args[0]));
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String line;
             int size;
             int count = 0;

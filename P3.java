@@ -5,8 +5,8 @@
  */
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class P3 {
     
@@ -107,16 +107,9 @@ public class P3 {
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
-
-        // Check arguments
-        if (args.length < 1) {
-            System.out.println("Error: Debe indicar el nombre del archivo.");
-            System.exit(1);
-        }
-        
         try {
             // Parse instance
-            BufferedReader br = new BufferedReader(new FileReader(args[0]));
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             String line;
             int m, n;
             int count = 0;
