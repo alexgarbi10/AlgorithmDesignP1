@@ -126,16 +126,66 @@ public class P2 {
             this.nodes[this.edges[index].b - 1].removeEdge(new Node(this.edges[index].a));
         }
 
-        public int disconnectOf() {
-            int count = 0, res = 0, rept = 0;
-            while (count < this.node_count) {
-                if (this.nodes[count].edges.size() == 0) {
-                    res = res + (this.node_size - rept);
-                    rept++;
+        public boolean isolateNode() {
+            int i = 0;
+            while (i < node_count) {
+                if (this.nodes[i].edges.size() == 0) {
+                    return true;
                 }
+                i++;
+            }
+            return false;
+        }
+
+        public int disconnectOf() {
+            int count = 0, res = 0, rept = 0, trs = 0;
+
+            boolean[] marked = new boolean[node_count];
+            Node aux;
+            LinkedList<Node> queue = new LinkedList<Node>();
+            Object[] edgesQ;
+
+            if (this.isolateNode()) {
+                while (count < this.node_count) {
+                    if (this.nodes[count].edges.size() == 0) {
+                        res = res + (this.node_size - rept);
+                        rept++;
+                    }
+                    count++;
+                }
+            }
+            res = res - rept;
+
+            count = 0;
+            //BFS
+            while (count < this.node_count) {
+                if (this.nodes[count].edges.size() != 0) { break; }
                 count++;
             }
-            return res - rept;
+
+            if (count == this.node_count) { return res; }
+
+            queue.add(this.nodes[count]);
+
+            while (!queue.isEmpty()) {
+                aux = queue.poll();
+                if (marked[aux.id - 1] != true) { 
+                    marked[aux.id - 1] = true;
+                    count = 0;
+                    edgesQ = aux.edges.toArray();
+                    while (count < edgesQ.length) {
+                        queue.add((Node) edgesQ[count]);
+                        count++;
+                    }
+                }
+            }
+
+            count = 0;
+            while (count < marked.length) {
+                if (marked[count] == true) { trs++; }
+                count++;
+            }
+            return res + (marked.length - rept - trs) * trs;
         }
     }
 
