@@ -15,48 +15,48 @@ public class P1 {
     
     public static class Node {
 
-	public int id = -1;
+        public int id = -1;
         public int x = -1;
         public int y = -1;
 
-	/**
-	 * Creates a new node with id i.
+        /**
+         * Creates a new node with id i.
          * @param i Identifier of the node.
          * @param x Coordinate of the x-axe.
          * @param y Coordinate of the y-axe.
-	 */
-	public Node (int i, int x, int y) {
+         */
+        public Node (int i, int x, int y) {
             this.id = i;
             this.x = x;
             this.y = y;
-	}
+        }
 
-	/**
+        /**
          * Compare nodes.
          * @param obj Object to compare.
          * @return boolean.
          */
-	@Override
-	public boolean equals(Object obj) {
+        @Override
+        public boolean equals(Object obj) {
             Node node;
 
             if (obj == null)
                 return false;
 
             if (!(obj instanceof Node))
-		return false;
+                return false;
 
             node = (Node) obj;
 
             return this.id == node.id;
-	}
+        }
 
-	/**
-	 * Prints the node.
-	 */
-	public void printNode() {
+        /**
+         * Prints the node.
+         */
+        public void printNode() {
             System.out.println("Id: "+this.id+" ("+this.x+", "+this.y+")");
-	}
+        }
     }
     
     public static class Edge {
@@ -91,7 +91,7 @@ public class P1 {
             edge = (Edge) obj;
 
             return (this.dst == edge.dst && this.src == edge.src) ||
-                    (this.dst == edge.src && this.src == edge.dst);
+                (this.dst == edge.src && this.src == edge.dst);
         }
         
         /**
@@ -112,7 +112,7 @@ public class P1 {
          * @return integer.
          */
         @Override
-        public int compare(Edge x, Edge y)
+            public int compare(Edge x, Edge y)
         {
             if (x.cost == y.cost)
                 return 0;
@@ -258,8 +258,8 @@ public class P1 {
          */
         public int Find(int node) {
             if (this.compConn[node] != node) {
-		int y = Find(this.compConn[node]);
-		this.compConn[node] = y;
+                int y = Find(this.compConn[node]);
+                this.compConn[node] = y;
             } 
 
             return (this.compConn[node]);
@@ -272,14 +272,14 @@ public class P1 {
          */
         public void Join(int src, int dst) {
             if (this.rank[src] > this.rank[dst]) {
-		this.compConn[dst] = src;
+                this.compConn[dst] = src;
             }
             else { 
-		this.compConn[src] = dst;
+                this.compConn[src] = dst;
 		
-		if (this.rank[src] == this.rank[dst]) {
+                if (this.rank[src] == this.rank[dst]) {
                     this.rank[src]++;
-		}		
+                }		
             }
 
             this.comp_size--;		
@@ -293,21 +293,21 @@ public class P1 {
             DecimalFormat df = new DecimalFormat("0.000");
     
             // Start every set
-    	    for (Node element : g.nodes) {
+            for (Node element : g.nodes) {
                 this.makeSet(element);
             }
 
             while ((!this.g.edges.isEmpty()) && (this.comp_size > m)) {
-        	Edge edge = this.g.edges.poll();
+                Edge edge = this.g.edges.poll();
                 
-		int compx = Find(edge.src);
-		int compy = Find(edge.dst);
+                int compx = Find(edge.src);
+                int compy = Find(edge.dst);
 		
                 // If compx == compy there is a cycle
-		if (compx != compy) {
+                if (compx != compy) {
                     this.min.add(edge);
                     Join(edge.src, edge.dst);
-		}
+                }
             }
             
             // Calculate costs for every edge in the min-tree
@@ -331,71 +331,71 @@ public class P1 {
     public static void main(String[] args) 
     {
         try 
-        {
-            // Parse instance
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String line;
-            int size;
-            int count = 0;
-            
-            line = br.readLine();
-            size = Integer.parseInt(line);
-            
-            if (size < 0)
             {
-                System.out.println("Error: El numero de casos de prueba debe ser positivo.");
-                System.exit(1);
-            }
+                // Parse instance
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                String line;
+                int size;
+                int count = 0;
             
-            // Solve every instance
-            while (count < size)
-            {
                 line = br.readLine();
-                String[] sf = line.split(" ");
-                int n = Integer.parseInt(sf[0]);
-                int r = Integer.parseInt(sf[1]);
-                int m = Integer.parseInt(sf[2]);
-                int u = Integer.parseInt(sf[3]);
-                int v = Integer.parseInt(sf[4]);
-                int index = 0;
-                Graph g = new Graph(n);
-                Graph min = new Graph(n);
+                size = Integer.parseInt(line);
+            
+                if (size < 0)
+                    {
+                        System.out.println("Error: El numero de casos de prueba debe ser positivo.");
+                        System.exit(1);
+                    }
+            
+                // Solve every instance
+                while (count < size)
+                    {
+                        line = br.readLine();
+                        String[] sf = line.split(" ");
+                        int n = Integer.parseInt(sf[0]);
+                        int r = Integer.parseInt(sf[1]);
+                        int m = Integer.parseInt(sf[2]);
+                        int u = Integer.parseInt(sf[3]);
+                        int v = Integer.parseInt(sf[4]);
+                        int index = 0;
+                        Graph g = new Graph(n);
+                        Graph min = new Graph(n);
                 
-                if ((n < 0) || (r < 0) || (m < 0) || (u < 0) || (v < 0))
-                {
-                    System.out.println("Error: Los enteros N,R,M,U y V deben ser positivos.");
-                    System.exit(1);
-                }
+                        if ((n < 0) || (r < 0) || (m < 0) || (u < 0) || (v < 0))
+                            {
+                                System.out.println("Error: Los enteros N,R,M,U y V deben ser positivos.");
+                                System.exit(1);
+                            }
                 
-                if (n < m) 
-                {
-                    System.out.println("Error: El numero de oficinas (N) debe ser mayor que el de modem (M).");
-                    System.exit(1);
-                }
+                        if (n < m) 
+                            {
+                                System.out.println("Error: El numero de oficinas (N) debe ser mayor que el de modem (M).");
+                                System.exit(1);
+                            }
                 
-                // Add every node
-                while (index < n)
-                {
-                    line = br.readLine();
-                    String[] coord = line.split(" "); 
-                    Node node = new Node(index, Integer.parseInt(coord[0]), Integer.parseInt(coord[1]));
-                    g.add(node);
-                    min.add(node);
-                    index++;
-                }
+                        // Add every node
+                        while (index < n)
+                            {
+                                line = br.readLine();
+                                String[] coord = line.split(" "); 
+                                Node node = new Node(index, Integer.parseInt(coord[0]), Integer.parseInt(coord[1]));
+                                g.add(node);
+                                min.add(node);
+                                index++;
+                            }
                 
-                // Add all posible edges with distances
-                g.createEdges();
+                        // Add all posible edges with distances
+                        g.createEdges();
                 
-                // Get the Minimum Spanning Tree 
-                Kruskal kruskal = new Kruskal(g,min,m,u,v,r,count+1);
-                kruskal.executeKruskal();
-                count++;
-            }
-        } 
+                        // Get the Minimum Spanning Tree 
+                        Kruskal kruskal = new Kruskal(g,min,m,u,v,r,count+1);
+                        kruskal.executeKruskal();
+                        count++;
+                    }
+            } 
         catch (IOException | NumberFormatException e) 
-        {
-            System.out.println("Error: No ha podido procesarse el archivo.");
-        }
+            {
+                System.out.println("Error: No ha podido procesarse el archivo.");
+            }
     }
 }
